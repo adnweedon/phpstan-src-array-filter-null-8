@@ -15,6 +15,7 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Return_;
 use PHPStan\Analyser\MutatingScope;
 use PHPStan\Analyser\Scope;
+use PHPStan\Php\PhpVersion;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\TrinaryLogic;
@@ -45,7 +46,7 @@ final class ArrayFilterFunctionReturnTypeHelper
 	private const USE_KEY = 2;
 	private const USE_ITEM = 3;
 
-	public function __construct(private ReflectionProvider $reflectionProvider)
+	public function __construct(private ReflectionProvider $reflectionProvider, private PhpVersion $phpVersion)
 	{
 	}
 
@@ -67,7 +68,9 @@ final class ArrayFilterFunctionReturnTypeHelper
 		if ($arrayArgType instanceof MixedType) {
 			return new BenevolentUnionType([
 				new ArrayType(new MixedType(), new MixedType()),
-				new NullType(),
+				$this->phpVersion->arrayFunctionsReturnNullWithNonArray()
+					? new NullType()
+					: new NeverType(),
 			]);
 		}
 
