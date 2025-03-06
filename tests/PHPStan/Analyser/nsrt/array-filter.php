@@ -11,15 +11,6 @@ function withoutAnyArgs(): void
 }
 
 /**
- * @param mixed $var1
- */
-function withMixedInsteadOfArray($var1): void
-{
-	$filtered1 = array_filter($var1);
-	assertType('(array|null)', $filtered1);
-}
-
-/**
  * @param array<string, bool|float|int|string> $map1
  * @param array<string, bool|float|int|string> $map2
  * @param array<string, bool|float|int|string> $map3
